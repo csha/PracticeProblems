@@ -48,6 +48,90 @@ public static double findMedianSortedArrays(int[] nums1, int[] nums2)  {
 }
 
 
+
+
+
+
+
+
+
+
+public static int myATOI(String str)
+{
+	ArrayList<Character> numbers = new ArrayList<Character>();
+	numbers.add('0'); numbers.add('1'); numbers.add('2'); numbers.add('3'); numbers.add('4'); numbers.add('5'); numbers.add('6'); numbers.add('7'); numbers.add('8'); numbers.add('9'); 
+	if(str.length() <= 0) {return 0;}
+	char whitespace = ' ';
+	char[] myCharArray = str.toCharArray();
+	boolean negativeFlag = false;
+	ArrayList<Integer> digitList = new ArrayList<>();
+	//Find Whitespaces
+	
+	
+	int index = 0;
+	
+	while(true)
+	{
+		if(myCharArray[index] == whitespace)
+		{	if(index+1 >= str.length()) {break;}
+			index++;
+			}
+		else {break;}
+	}
+	if(myCharArray[index] == '-') {negativeFlag = true; if(index+1 <str.length()) {index++;}else{return 0;}}
+	else if(myCharArray[index] == '+') {if(index+1 <str.length()) {index++;}else{return 0;}}
+	while(true)
+	{
+		if(numbers.contains(myCharArray[index])) 
+			{digitList.add(Character.getNumericValue(myCharArray[index]));
+			if(index+1 >= str.length()) {break;}
+			index++;
+			}
+		else {break;}
+	}
+
+	
+	int toReturn = 0;
+	if(digitList.size() == 0) {return toReturn;}
+	if(digitList.size() > 10) {if(negativeFlag) {return -2147483648;}else {return 2147483647;}}
+	if(digitList.size()== 10) 
+	{
+		if(digitList.get(0) > 2)
+		{
+			if(negativeFlag) {return -2147483647;}else {return 2147483647;}
+		}
+		else if(digitList.get(0) < 2)
+		{for(int i = 0; i < digitList.size(); i++)
+		{
+			{toReturn = toReturn * 10;
+			toReturn += digitList.get(i);}
+		}}
+		
+		else {
+			int sum = 0;
+			for(int i = 1; i < digitList.size(); i ++)
+			{
+				sum = sum * 10;
+				sum += digitList.get(i);
+			}
+			if(negativeFlag) {if(sum>147483648) {return -2147483648;}else{return (0 - (2000000000 + sum));}}
+			else if(sum>147483647) {if(negativeFlag) {return -2147483647;}else {return 2147483647;}}
+			else {if(negativeFlag){return (0 - (2000000000 + sum)); }else{return 2000000000 + sum;}}
+		}
+	}
+	
+	else {
+		for(int i = 0; i < digitList.size(); i++)
+		{
+			{toReturn = toReturn * 10;
+			toReturn += digitList.get(i);}
+		}
+	}
+	
+	if(negativeFlag) {return 0-toReturn;}
+	else {return toReturn;}
+}
+
 public static String longestPalindrome(String S)
 {
 	//Step 1: find matching : bb or matching seperated by 1: bab
@@ -129,5 +213,21 @@ public static String longestPalindrome(String S)
 		System.out.println(longestPalindrome(toGive1));
 		System.out.println(longestPalindrome(toGive2));
 		System.out.println(longestPalindrome(toGive3));
+		String atoitest1 = "213";
+		String atoitest2 = " 213";
+		String atoitest3 = " 213x";
+		String atoitest4 = " x213x";
+		String atoitest5 = "214748364";
+		String atoitest6 = "2147483648";
+		String atoitest7 = "-2147483647";
+		String atoitest8 = "      -11919730356x";
+		System.out.println(myATOI(atoitest1));
+		System.out.println(myATOI(atoitest2));
+		System.out.println(myATOI(atoitest3));
+		System.out.println(myATOI(atoitest4));
+		System.out.println(myATOI(atoitest5));
+		System.out.println(myATOI(atoitest6));
+		System.out.println(myATOI(atoitest7));
+		System.out.println(myATOI(atoitest8));
 	}
 }
