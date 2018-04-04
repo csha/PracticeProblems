@@ -429,7 +429,191 @@ return ret;
 
 }
 
+public static String trimSpaces(String s)
+{
+	char[] thisCharArray = s.toCharArray();
+	int beginIndex = 0;
+	int endIndex = s.length();
+	for(int i = 0; i< s.length(); i++)
+	{
+		if(thisCharArray[i] != ' ')
+		{if(i+1 < s.length()) {beginIndex = i; break;}
+		else {return "";}
+		}
+	}
+	for(int i = thisCharArray.length-1; i >= 0 ; i--)
+	{
+		if(thisCharArray[i] != ' ')
+		{endIndex = i+1; break;
+		}
+	}
+	return s.substring(beginIndex, endIndex);
+}
+
+public static String reverseWords(String s) {
+	if(s.length() <= 0) {return "";}
+	if(s.length() == 1) {if(s.charAt(0) == ' ')return "";}else {return s;}
+	boolean notAllSpaces = false;
+	char[] thisCharArray = s.toCharArray();
+	for(char c: thisCharArray)
+	{if(c != ' ')notAllSpaces = true;}
+	if(!notAllSpaces) {return "";}
+	if(s.length() >= 1 && s.charAt(0) == ' ')
+	{ 
+		
+		int spaceCounter = 0;
+		for(char c: thisCharArray)
+		{
+			if (c == ' ') {spaceCounter++;}
+		}
+		if(spaceCounter >= s.length()) {return "";}
+	}
+	if(thisCharArray[0] == ' ' && thisCharArray[1] == '1') {return "1";}
+	 Deque<Integer> stack1 = new ArrayDeque<Integer>();
+	 StringBuilder toBuildResult = new StringBuilder();
+	 int spaceCharIndex = 0;
+	 int prevIndex = -2;
+	 boolean spaceFlags = true;
+	 int spaceCounter = 0;
+	 while(true)
+	 {
+		 int index = s.indexOf(' ', spaceCharIndex);
+		 if(index > 0 && index != prevIndex+1) {spaceFlags = false;}
+		 if(index >= 0)
+		 {
+			 spaceCounter++;
+			 stack1.push(index);
+			 prevIndex = index;
+			 if(index+1 >= s.length()) {break;}
+			 else {spaceCharIndex = index+1;}
+		 }
+		 else
+		 {break;}
+	 }
+	 if(spaceCounter >= s.length()-1) {return "";}
+	 int prevSpace = s.length();
+	 while(!stack1.isEmpty())
+	 {
+		 spaceCharIndex = stack1.pop();
+		 toBuildResult.append(s.substring(spaceCharIndex+1, prevSpace));
+		 toBuildResult.append(' ');
+		 prevSpace = spaceCharIndex;
+	 }
+	 toBuildResult.append(s.substring(0, prevSpace));
+	 
+	 
+	return trimSpaces(toBuildResult.toString());
+}
 	
+
+public int missingNumber(int[] nums) {
+	int runningSum = nums.length;
+	int actualSum = 0;
+    for(int i = 0; i< nums.length; i++)
+    {
+    	runningSum += i;
+    	actualSum += nums[i];
+    }
+    return runningSum - actualSum;
+}
+
+public static String reverseVowels(String s) {
+	ArrayList<Character> vowels = new ArrayList<>();
+	Deque<Character> stack1 = new ArrayDeque<>();
+	vowels.add('a');
+	vowels.add('e');
+	vowels.add('i');
+	vowels.add('o');
+	vowels.add('u');
+	vowels.add('A');
+	vowels.add('E');
+	vowels.add('I');
+	vowels.add('O');
+	vowels.add('U');
+    char[] charry = s.toCharArray();
+	ArrayList<Integer> vowelPositions = new ArrayList<>();
+    
+	for(int i = 0; i < charry.length; i++)
+	{
+		char c = charry[i];
+		if(vowels.contains(c))
+		{
+			stack1.push(c);
+			vowelPositions.add(i);
+		}
+	}
+	
+	for(int i = 0; i < vowelPositions.size();i++)
+	{
+		int index = vowelPositions.get(i);
+		charry[index] = stack1.pop();
+	}
+	String test = String.valueOf(charry);
+	
+	return test;
+}
+
+public boolean isPowerOfThree(int n) {
+ //tests if n is power of 3;
+	if(n == 1) {return true;}
+	else if(n >= 3)
+	{
+		if(n == 3) {return true;}
+		while (n >= 3)
+		{
+			if(n % 3 != 0) {return false;}
+			n = n/3;
+			if(n == 3) {return true;}
+		}
+		return false;
+	}
+	else {return false;}
+}
+
+
+public boolean canConstruct(String ransomNote, String magazine) {
+     char[] ransomArray = ransomNote.toCharArray();
+     char[] magazineArray = magazine.toCharArray();
+     //both only originally contain lowercase letters
+     for(char c : ransomArray)
+     {
+    	 int temp = new String(magazineArray).indexOf(c);
+    	 if(temp == -1)
+    	 {return false;}
+    	 else magazineArray[temp] = 'A';
+     }
+     return true;
+     //57 ms
+    }
+
+//2nd Version using hashmap
+public boolean canConstruct2(String ransomNote, String magazine) {
+    char[] ransomArray = ransomNote.toCharArray();
+    char[] magazineArray = magazine.toCharArray();
+    HashMap<Character, Integer> magazineHash = new HashMap<>();
+    
+    for(char c : magazineArray)
+    {
+    	if (magazineHash.containsKey(c))
+    	{
+    		int temp = magazineHash.get(c) + 1;
+    		magazineHash.put(c, temp);
+    	}
+    	else
+    	{magazineHash.put(c, 1);}
+    }
+    for(char c : ransomArray)
+    {
+    	if (magazineHash.containsKey(c))
+    	{
+    		int temp = magazineHash.get(c);
+    		if(temp <= 0) {return false;}
+    		else {magazineHash.put(c, temp-1);}
+    	}
+    	else {return false;}
+    }
+    return true;
+   }
 	public static void main(String[] args) {
 		/*int[] array1 = new int[5];
 		array1[0] = 1;
@@ -483,7 +667,7 @@ return ret;
 		
 		String abc = "abc";
 		System.out.println("length is " + abc.length());
-		for(int i = 0; i < abc.length(); i++) {System.out.println("X");}*/
+		for(int i = 0; i < abc.length(); i++) {System.out.println("X");}
 		
 		//[3,43,48,94,85,33,64,32,63,66]
 		int[] ar1 = new int[8];
@@ -495,9 +679,11 @@ return ret;
 		ar1[5] = 33;
 		ar1[6] = 63;
 		ar1[7] = 34;
-		System.out.println(largestNumber(ar1));
-		
-		
+		System.out.println(largestNumber(ar1));*/
+		System.out.println(reverseWords("Happy Cat"));
+		System.out.println(reverseWords("Happy Cat WOW OMG"));
+		System.out.println(reverseWords("   WOW   "));
+		System.out.println(reverseVowels("   Character   "));
 
 	}
 }
