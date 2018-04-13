@@ -29,62 +29,60 @@ abcd = a.*c*
 	
 	public static boolean isMatch(String S, String P)
 	{
-		if(S.equals(P)) {return true;}
-		if((S.length()<= 0) && (P.length()<= 0)) {return true;}
+		char[] str1 = S.toCharArray();
+		char[] str2 = P.toCharArray();
 		
-		
-		boolean truthBoolean = false;
-		char[] SCharArray = S.toCharArray();
-		char[] PCharArray = P.toCharArray();
-		Deque<String> stack = new ArrayDeque<String>();
-			//Element is either
-			// c
-			// .
-			// .*
-			// c*
-			//So use stacks and check if elements match.
-		int ptr1 = 0;
-		int ptr2 = 0;
-		
-		
+		int str1ptr = 0;
+		int str2ptr = 0;
 		while(true)
 		{
-			if(ptr1 >= S.length()) {break;}
 			
-			//Selecting each element (either a char or char*)
-			char selecter = SCharArray[ptr1];
-			if(ptr1 + 1 <S.length()) //looking if * is present
-				{
-					if(SCharArray[ptr1+1] == '*')
-					{
-						String element = new StringBuilder().append(SCharArray[ptr1]).append(SCharArray[ptr2]).toString();
-						stack.push(element);
-						ptr1++;
-						ptr1++;
-					}
-					else
-					{
-						String element = new StringBuilder().append(SCharArray[ptr1]).toString();
-						stack.push(element);
-						ptr1++;
-					}
-				}
-			else
-			{
-				String element = new StringBuilder().append(SCharArray[ptr1]).toString();
-				stack.push(element);
-				ptr1++;
-			}
-			//element is stacked.
+			// cases:
+			// 1) Basic char
+			// 2) Basic char with *
+			// 3) .
+			// 4) .*
+			int str1case;
+			int str2case;
 			
 			
+			char char1 = str1[str1ptr];
+			boolean ast1 = false;
+			//check for following asterisk 
+			if(str1ptr+1 < str1.length) 
+				{if(str1[str1ptr+1] == '*') {ast1 = true;}}
+			
+			
+			char char2 = str2[str2ptr];
+			boolean ast2 = false;
+			//check for following asterisk 
+			if(str2ptr+1 < str2.length) 
+				{if(str2[str2ptr+1] == '*') {ast2 = true;}}
+			
+			
+			//setting cases for str1
+			if(char1 == '.' && ast1) {str1case=4;}
+			else if(char1 == '.') {str1case = 3;}
+			else if(ast1) {str1case =2;}
+			else {str1case = 1;}
+			//setting cases for str2
+			if(char2 == '.' && ast2) {str2case=4;}
+			else if(char2 == '.') {str2case = 3;}
+			else if(ast2) {str2case =2;}
+			else {str2case = 1;}
+
 			
 			
 			
-			break;
+			
+			
+			
+			
+			
+			
+			
 		}
 		
-		return truthBoolean;
 	}
 	
 	public static void main(String[] args) {

@@ -2,6 +2,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Arrays;
 import java.util.Collections;
@@ -674,7 +675,179 @@ After applying operation [0, 2, -2]:
 	return returnArray;
 }
 
+public char findTheDifference(String s, String t) {
+	
+    char[] tar = t.toCharArray();
+    int tptr = 0;
+	HashMap<Character, Integer> smap = new HashMap<>();
+   for(int i = 0; i < s.length(); i++)
+   {
+	   if(smap.containsKey(s.charAt(i))) {smap.put(s.charAt(i), smap.get(s.charAt(i)) + 1);}
+	   else {smap.put(s.charAt(i), 1);}
+   }
+   for(int i = 0; i < t.length(); i++)
+   {
+	  if (smap.containsKey(t.charAt(i))) {
+		  if(smap.get(t.charAt(i)) <= 0) {return t.charAt(i);}
+		  smap.put(t.charAt(i), smap.get(t.charAt(i))-1 );}
+	  else {return t.charAt(i);}
+   }
+   char k = 's';
+   return k;
+}
 
+public static String addBinary(String a, String b) {
+	if(a.length() <= 0) {return b;}
+	if(b.length() <= 0) {return a;}
+	Deque<Character> sumStack = new ArrayDeque<>();
+	int carry = 0;
+    char[] firstCharArray; char[] secondCharArray;
+    if(a.length() < b.length()) {firstCharArray = b.toCharArray(); secondCharArray = a.toCharArray();}
+    else {firstCharArray = a.toCharArray(); secondCharArray = b.toCharArray();}
+    //assumes a is longer or equal length to b or it flips them.
+    int ptr;
+    for(ptr = 0 ; ptr < secondCharArray.length; ptr++)
+    {
+    	char aChar = firstCharArray[firstCharArray.length - 1 - ptr];
+    	char bChar = secondCharArray[secondCharArray.length - 1 - ptr];
+    	if(aChar == '1' && bChar == '1')
+    	{
+    		if(carry == 0) {sumStack.push('0'); carry = 1;}
+    		else {sumStack.push('1');carry = 1;}
+    	}
+    	else if(aChar == '1' || bChar == '1')
+    	{
+    		if(carry == 0) {sumStack.push('1');}
+    		else {sumStack.push('0');}
+    	}
+    	else
+    	{
+    		if(carry == 0) {sumStack.push('0');}
+    		else {sumStack.push('1');carry = 0;}
+    	}
+    }
+    while(ptr < firstCharArray.length)
+    {
+    	char aChar = firstCharArray[firstCharArray.length - 1 - ptr];
+    	if(aChar == '1')
+    	{
+    		if(carry == 1) {sumStack.push('0'); carry = 1;}
+    		else {sumStack.push('1');carry = 0;}
+    	}
+    	else
+    	{
+    		if(carry == 1) {sumStack.push('1'); carry = 0;}
+    		else {sumStack.push('0');carry = 0;}
+    	}
+    	
+    	ptr++;
+    }
+    if(carry == 1) {sumStack.push('1');}
+    StringBuilder SB = new StringBuilder();
+    while(!sumStack.isEmpty())
+    {
+    	SB.append(sumStack.pop());
+    }
+    return SB.toString();
+}
+
+public String frequencySort(String s) {
+	
+	if(s.length()<= 0) {return "";}
+	
+	HashMap<Character, Integer> map = new HashMap<>();
+	ArrayList<Character> clist = new ArrayList<>();
+	
+ for(int i = 0; i < s.length(); i++)
+ {
+	 char get = s.charAt(i);
+	 if (map.containsKey(get)) {map.put(get, map.get(get)+1);}
+	 else {map.put(get, 1);}
+	 if(!clist.contains(get)) {clist.add(get);}
+ }
+ 
+ StringBuilder toReturn = new StringBuilder();
+ int max = Collections.max(map.values());
+ while(max > 0)
+ {
+	 for(char letter : clist)
+	 {
+		 int count = map.get(letter);
+		 if(count == max)
+		 {
+			 for(int i = 0; i < max; i++) {toReturn.append(letter);}
+			 map.put(letter, 0);
+			 break;
+		 }
+	 }
+	 max = Collections.max(map.values());
+ }
+ String returned = toReturn.toString();
+	return returned;
+}
+	
+public int canCompleteCircuit(int[] gas, int[] cost) {
+    int currentGas = 0;
+    for(int ptr = 0; ptr < gas.length; ptr++)
+    {
+    	int traversalCount = 0;
+    	boolean fulfilled = true;
+    	currentGas = 0;
+    	for(int ptr2 = ptr; traversalCount < gas.length; ptr2++)
+    	{
+    		if(ptr2 >= gas.length) {ptr2 = 0;}
+    		currentGas += gas[ptr2];
+    		if(cost[ptr2] > currentGas) {fulfilled = false;break;}
+    		else {currentGas = currentGas - cost[ptr2]; traversalCount++;}
+    	}
+    	if(fulfilled) {return ptr;}
+    }
+    return -1;
+    
+}
+
+//pascals triangle
+public static List<List<Integer>> generate(int numRows) {
+ List<List<Integer>> listOfList = new ArrayList<>();
+ if(numRows <= 0) {return listOfList;}
+ ArrayList<Integer> row1 = new ArrayList<>();
+ row1.add(1);
+ listOfList.add(row1);
+ if(numRows == 1) {return listOfList;}
+ ArrayList<Integer> row2 = new ArrayList<>();
+ row2.add(1);row2.add(1);
+ listOfList.add(row2);
+ if(numRows==2) {return listOfList;}
+ for(int i = 3; i <= numRows; i++)
+ {
+	 
+	 ArrayList<Integer> newRow = new ArrayList<>();
+	 List<Integer> prevRow = listOfList.get(i-2);
+	 newRow.add(1);
+	 for(int k = 1; k < i-1; k++)
+	 {
+		 int sum = prevRow.get(k-1) + prevRow.get(k);
+		 newRow.add(sum);
+	 }
+	 newRow.add(1);
+	 listOfList.add(newRow);
+ }
+	
+	return listOfList;
+	
+}
+
+public int countSegments(String s) {
+    int count = 0;
+    boolean triggeredSpace = true;
+    for(int i = 0; i < s.length(); i++)
+    {
+        if(s.charAt(i) == ' '){triggeredSpace = true;}
+        else if(triggeredSpace){count++;triggeredSpace = false;}
+        else{}
+    }
+    return count;
+}
 
 	public static void main(String[] args) {
 		/*int[] array1 = new int[5];
@@ -741,11 +914,13 @@ After applying operation [0, 2, -2]:
 		ar1[5] = 33;
 		ar1[6] = 63;
 		ar1[7] = 34;
-		System.out.println(largestNumber(ar1));*/
+		System.out.println(largestNumber(ar1));
 		System.out.println(reverseWords("Happy Cat"));
 		System.out.println(reverseWords("Happy Cat WOW OMG"));
 		System.out.println(reverseWords("   WOW   "));
 		System.out.println(reverseVowels("   Character   "));
-
+		System.out.println(addBinary("11","11"));*/
+		List<List<Integer>> myList = generate(5);
+		
 	}
 }
